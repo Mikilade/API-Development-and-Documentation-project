@@ -5,6 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 from flaskr import create_app
 from models import setup_db, Question, Category
+from settings import DB_PASSWORD, DB_USER, DB_TEST_NAME
 
 
 class TriviaTestCase(unittest.TestCase):
@@ -12,8 +13,7 @@ class TriviaTestCase(unittest.TestCase):
 
     def setUp(self):
         """Define test variables and initialize app."""
-        self.database_name = "trivia_test"
-        self.database_path = f'postgresql+psycopg2://postgres:Biosphere4212!@localhost:5432/{self.database_name}'
+        self.database_path = f'postgresql+psycopg2://{DB_USER}:{DB_PASSWORD}@localhost:5432/{DB_TEST_NAME}'
         
         self.app = create_app({
             "SQLALCHEMY_DATABASE_URI": self.database_path
@@ -92,7 +92,7 @@ class TriviaTestCase(unittest.TestCase):
         self.assertEqual(data['difficulty'], 2)
 
         # test delete
-        res2 = self.client().delete(f'/questions/{data['created']}')
+        res2 = self.client().delete(f"/questions/{data['created']}")
         data2 = json.loads(res2.data)
         self.assertEqual(res2.status_code, 200)
         self.assertEqual(data2['success'], True)
